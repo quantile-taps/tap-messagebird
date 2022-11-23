@@ -18,7 +18,7 @@ class MessagebirdStream(RESTStream):
     """Messagebird stream class."""
 
     # TODO: Set the API's base URL here:
-    url_base = "https://api.mysample.com"
+    url_base = "https://rest.messagebird.com"
 
     # OR use a dynamic url_base:
     # @property
@@ -26,18 +26,8 @@ class MessagebirdStream(RESTStream):
     #     """Return the API URL root, configurable via tap settings."""
     #     return self.config["api_url"]
 
-    records_jsonpath = "$[*]"  # Or override `parse_response`.
+    records_jsonpath = "$.items[*]"  # Or override `parse_response`.
     next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
-
-    @property
-    def authenticator(self) -> APIKeyAuthenticator:
-        """Return a new authenticator object."""
-        return APIKeyAuthenticator.create_for_stream(
-            self,
-            key="x-api-key",
-            value=self.config.get("api_key"),
-            location="header"
-        )
 
     @property
     def http_headers(self) -> dict:
@@ -45,6 +35,7 @@ class MessagebirdStream(RESTStream):
         headers = {}
         if "user_agent" in self.config:
             headers["User-Agent"] = self.config.get("user_agent")
+        headers["Authorization"] = f"AccessKey {self.config['api_key']}"
         # If not using an authenticator, you may also provide inline auth headers:
         # headers["Private-Token"] = self.config.get("auth_token")
         return headers

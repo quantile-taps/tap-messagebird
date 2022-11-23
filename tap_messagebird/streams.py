@@ -13,14 +13,15 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 #       - Copy-paste as many times as needed to create multiple stream types.
 
 
-class UsersStream(MessagebirdStream):
-    """Define custom stream."""
-    name = "users"
-    path = "/users"
+class ConversationsStream(MessagebirdStream):
+    """Conversations stream"""
+    name = "conversation"
+    url_base = "https://conversations.messagebird.com/v1"
+    path = "/conversations"
     primary_keys = ["id"]
     replication_key = None
     # Optionally, you may also use `schema_filepath` in place of `schema`:
-    # schema_filepath = SCHEMAS_DIR / "users.json"
+    schema_filepath = SCHEMAS_DIR / "conversation.json"
     schema = th.PropertiesList(
         th.Property("name", th.StringType),
         th.Property(
@@ -46,17 +47,4 @@ class UsersStream(MessagebirdStream):
             description="State name in ISO 3166-2 format"
         ),
         th.Property("zip", th.StringType),
-    ).to_dict()
-
-
-class GroupsStream(MessagebirdStream):
-    """Define custom stream."""
-    name = "groups"
-    path = "/groups"
-    primary_keys = ["id"]
-    replication_key = "modified"
-    schema = th.PropertiesList(
-        th.Property("name", th.StringType),
-        th.Property("id", th.StringType),
-        th.Property("modified", th.DateTimeType),
     ).to_dict()

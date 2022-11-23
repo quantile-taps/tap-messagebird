@@ -1,0 +1,112 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "contactId": {
+            "type": "string"
+        },
+        "contact": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "href": {
+                    "type": "string"
+                },
+                "msisdn": {
+                    "type": "integer"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "customDetails": {
+                    "type": "object",
+                    "properties": {
+                        "custom1": {
+                            "type": "null"
+                        },
+                        "custom2": {
+                            "type": "null"
+                        },
+                        "custom3": {
+                            "type": "null"
+                        },
+                        "custom4": {
+                            "type": "null"
+                        }
+                    }
+                },
+                "createdDatetime": {
+                    "type": "string"
+                },
+                "updatedDatetime": {
+                    "type": [
+                        "null",
+                        "string"
+                    ]
+                }
+            }
+        },
+        "channels": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "platformId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "createdDatetime": {
+                        "type": "string"
+                    },
+                    "updatedDatetime": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "status": {
+            "type": "string"
+        },
+        "createdDatetime": {
+            "type": "string"
+        },
+        "updatedDatetime": {
+            "type": "string"
+        },
+        "lastReceivedDatetime": {
+            "type": "string"
+        },
+        "lastUsedChannelId": {
+            "type": "string"
+        },
+        "lastUsedPlatformId": {
+            "type": "string"
+        },
+        "messages": {
+            "type": "object",
+            "properties": {
+                "totalCount": {
+                    "type": "integer"
+                },
+                "href": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
