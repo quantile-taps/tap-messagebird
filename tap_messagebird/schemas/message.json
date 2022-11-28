@@ -1,0 +1,49 @@
+{
+    "type": "object",
+    "properties": {
+        "_sdc_conversations_id": {
+            "type": "string"
+        },
+        "id": {
+            "type": "string"
+        },
+        "conversationId": {
+            "type": "string"
+        },
+        "platform": {
+            "type": "string"
+        },
+        "to": {
+            "type": "string"
+        },
+        "from": {
+            "type": "string"
+        },
+        "channelId": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        },
+        "content": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "direction": {
+            "type": "string"
+        },
+        "status": {
+            "type": "string"
+        },
+        "createdDatetime": {
+            "type": "string"
+        },
+        "updatedDatetime": {
+            "type": "string"
+        }
+    }
+}

@@ -16,17 +16,9 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 class MessagebirdStream(RESTStream):
     """Messagebird stream class."""
-
-    # TODO: Set the API's base URL here:
     url_base = "https://rest.messagebird.com"
 
-    # OR use a dynamic url_base:
-    # @property
-    # def url_base(self) -> str:
-    #     """Return the API URL root, configurable via tap settings."""
-    #     return self.config["api_url"]
-
-    records_jsonpath = "$.items[*]"  # Or override `parse_response`.
+    records_jsonpath = "$.items[*]"  
     next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
 
     @property

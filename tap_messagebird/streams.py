@@ -12,39 +12,32 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 # TODO: - Override `UsersStream` and `GroupsStream` with your own stream definition.
 #       - Copy-paste as many times as needed to create multiple stream types.
 
+class MessagebirdConversations(MessagebirdStream):
+    """Conversations API has some differeences from the main API"""
+    url_base = "https://conversations.messagebird.com/v1"
 
-class ConversationsStream(MessagebirdStream):
+class ConversationsStream(MessagebirdConversations):
     """Conversations stream"""
     name = "conversation"
-    url_base = "https://conversations.messagebird.com/v1"
     path = "/conversations"
     primary_keys = ["id"]
     replication_key = None
     # Optionally, you may also use `schema_filepath` in place of `schema`:
     schema_filepath = SCHEMAS_DIR / "conversation.json"
-    schema = th.PropertiesList(
-        th.Property("name", th.StringType),
-        th.Property(
-            "id",
-            th.StringType,
-            description="The user's system ID"
-        ),
-        th.Property(
-            "age",
-            th.IntegerType,
-            description="The user's age in years"
-        ),
-        th.Property(
-            "email",
-            th.StringType,
-            description="The user's email address"
-        ),
-        th.Property("street", th.StringType),
-        th.Property("city", th.StringType),
-        th.Property(
-            "state",
-            th.StringType,
-            description="State name in ISO 3166-2 format"
-        ),
-        th.Property("zip", th.StringType),
-    ).to_dict()
+    
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for child streams."""
+        return {
+            "_sdc_conversations_id": record["id"],
+        }
+
+
+class MessagesStream(MessagebirdConversations):
+    """Messages stream"""
+    name = "message"
+    path = "/conversations/{_sdc_conversations_id}/messages"
+    primary_keys = ["id"]
+    replication_key = None
+    # Optionally, you may also use `schema_filepath` in place of `schema`:
+    schema_filepath = SCHEMAS_DIR / "message.json"
+    parent_stream_type = ConversationsStream
