@@ -1,49 +1,131 @@
 {
     "type": "object",
     "properties": {
-        "_sdc_conversations_id": {
-            "type": "string"
-        },
         "id": {
             "type": "string"
         },
-        "conversationId": {
+        "href": {
             "type": "string"
         },
-        "platform": {
-            "type": "string"
-        },
-        "to": {
-            "type": "string"
-        },
-        "from": {
-            "type": "string"
-        },
-        "channelId": {
+        "direction": {
             "type": "string"
         },
         "type": {
             "type": "string"
         },
-        "content": {
-            "type": "object",
-            "properties": {
-                "text": {
-                    "type": "string"
-                }
-            }
-        },
-        "direction": {
+        "originator": {
             "type": "string"
         },
-        "status": {
+        "body": {
             "type": "string"
+        },
+        "reference": {
+            "type": ["string", "null"]
+        },
+        "validity": {
+            "type": ["string", "null"]
+        },
+        "gateway": {
+            "type": "integer"
+        },
+        "typeDetails": {
+            "type": "object"
+        },
+        "datacoding": {
+            "type": "string"
+        },
+        "mclass": {
+            "type": "integer"
+        },
+        "scheduledDatetime": {
+            "type": ["string", "null"]
         },
         "createdDatetime": {
             "type": "string"
         },
-        "updatedDatetime": {
-            "type": "string"
+        "recipients": {
+            "type": "object",
+            "properties": {
+                "totalCount": {
+                    "type": "integer"
+                },
+                "totalSentCount": {
+                    "type": "integer"
+                },
+                "totalDeliveredCount": {
+                    "type": "integer"
+                },
+                "totalDeliveryFailedCount": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "recipient": {
+                                "type": "integer"
+                            },
+                            "originator": {
+                                "type": ["string", "null"]
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "statusDatetime": {
+                                "type": "string"
+                            },
+                            "recipientCountry": {
+                                "type": "string"
+                            },
+                            "recipientCountryPrefix": {
+                                "type": "integer"
+                            },
+                            "recipientOperator": {
+                                "type": "string"
+                            },
+                            "messageLength": {
+                                "type": "integer"
+                            },
+                            "statusErrorCode": {
+                                "type": ["string", "null"]
+                            },
+                            "statusReason": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": [
+                                            "null",
+                                            "number"
+                                        ]
+                                    },
+                                    "currency": {
+                                        "type": [
+                                            "null",
+                                            "string"
+                                        ]
+                                    }
+                                }
+                            },
+                            "mccmnc": {
+                                "type": "string"
+                            },
+                            "mcc": {
+                                "type": "string"
+                            },
+                            "mnc": {
+                                "type": "string"
+                            },
+                            "messagePartCount": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

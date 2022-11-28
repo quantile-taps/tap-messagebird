@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Dict, Iterable, Optional
+from urllib.parse import urlparse
 
 import requests
 from singer_sdk.helpers.jsonpath import extract_jsonpath
@@ -19,6 +20,7 @@ class MessagebirdStream(RESTStream):
 
     records_jsonpath = "$.items[*]"
     next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
+    _LOG_REQUEST_METRIC_URLS: bool = True
 
     @property
     def http_headers(self) -> dict:
@@ -75,3 +77,28 @@ class MessagebirdStream(RESTStream):
         """Parse the response and return an iterator of result records."""
         # TODO: Parse response body and return a set of records.
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
+
+    def response_error_message(self, response: requests.Response) -> str:
+        """Build error message for invalid http statuses.
+
+        WARNING - Override this method when the URL path may contain secrets or PII
+
+        Args:
+            response: A `requests.Response`_ object.
+
+        Returns:
+            str: The error message
+        """
+        full_path = urlparse(response.url).path or self.path
+        error_content = ""
+        if 400 <= response.status_code < 500:
+            error_type = "Client"
+            error_content = response.json()
+        else:
+            error_type = "Server"
+
+        return (
+            f"{response.status_code} {error_type} Error: "
+            f"{response.reason} for path: {full_path} . "
+            f"{error_content=}"
+        )

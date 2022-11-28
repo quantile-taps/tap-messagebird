@@ -29,16 +29,16 @@
                     "type": "object",
                     "properties": {
                         "custom1": {
-                            "type": "null"
+                            "type": ["null","string"]
                         },
                         "custom2": {
-                            "type": "null"
+                            "type": ["null","string"]
                         },
                         "custom3": {
-                            "type": "null"
+                            "type": ["null","string"]
                         },
                         "custom4": {
-                            "type": "null"
+                            "type": ["null","string"]
                         }
                     }
                 },

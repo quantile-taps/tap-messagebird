@@ -1,7 +1,7 @@
 """Stream type classes for tap-messagebird."""
 
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from tap_messagebird.client import MessagebirdStream
 
@@ -24,20 +24,23 @@ class ConversationsStream(MessagebirdConversations):
     # Optionally, you may also use `schema_filepath` in place of `schema`:
     schema_filepath = SCHEMAS_DIR / "conversation.json"
 
-    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        """Return a context dictionary for child streams."""
-        return {
-            "_sdc_conversations_id": record["id"],
-        }
 
-
-class MessagesStream(MessagebirdConversations):
+class MessagesStream(MessagebirdStream):
     """Messages stream."""
 
     name = "message"
-    path = "/conversations/{_sdc_conversations_id}/messages"
+    path = "/messages"
     primary_keys = ["id"]
     replication_key = None
     # Optionally, you may also use `schema_filepath` in place of `schema`:
     schema_filepath = SCHEMAS_DIR / "message.json"
-    parent_stream_type = ConversationsStream
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        """Return a dictionary of values to be used in URL parameterization."""
+        params = super().get_url_params(
+            context=context, next_page_token=next_page_token
+        )
+        params["from"] = self.config["start_date"]
+        return params

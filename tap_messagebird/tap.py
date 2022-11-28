@@ -2,6 +2,7 @@
 
 from typing import List
 
+import pendulum
 from singer_sdk import Stream, Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 
@@ -35,7 +36,11 @@ class TapMessagebird(Tap):
         th.Property(
             "start_date",
             th.DateTimeType,
-            description="The earliest record date to sync",
+            default=pendulum.now().subtract(years=3).set(tz="UTC").to_iso8601_string(),
+            description=(
+                "When to pull records starting at what date. "
+                "ISO8601 format of date, defaults to 3 years ago."
+            ),
         ),
     ).to_dict()
 
