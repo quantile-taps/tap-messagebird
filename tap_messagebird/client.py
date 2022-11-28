@@ -1,24 +1,23 @@
 """REST client handling, including MessagebirdStream base class."""
 
-import requests
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Any, Dict, Optional, Union, List, Iterable
+from typing import Any, Dict, Iterable, Optional
 
-from memoization import cached
-
+import requests
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
-from singer_sdk.authenticators import APIKeyAuthenticator
-
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 
 class MessagebirdStream(RESTStream):
     """Messagebird stream class."""
+
     url_base = "https://rest.messagebird.com"
 
-    records_jsonpath = "$.items[*]"  
+    records_jsonpath = "$.items[*]"
     next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
 
     @property
@@ -76,8 +75,3 @@ class MessagebirdStream(RESTStream):
         """Parse the response and return an iterator of result records."""
         # TODO: Parse response body and return a set of records.
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
-
-    def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure."""
-        # TODO: Delete this method if not needed.
-        return row

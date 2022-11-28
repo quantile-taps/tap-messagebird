@@ -2,13 +2,12 @@
 
 from typing import List
 
-from singer_sdk import Tap, Stream
+from singer_sdk import Stream, Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
+
 # TODO: Import your custom stream types here:
-from tap_messagebird.streams import (
-    ConversationsStream,
-    MessagesStream,
-)
+from tap_messagebird.streams import ConversationsStream, MessagesStream
+
 STREAM_TYPES = [
     ConversationsStream,
     MessagesStream,
@@ -17,6 +16,7 @@ STREAM_TYPES = [
 
 class TapMessagebird(Tap):
     """Messagebird tap class."""
+
     name = "tap-messagebird"
 
     # TODO: Update this section with the actual config values you expect:
@@ -26,12 +26,16 @@ class TapMessagebird(Tap):
             th.StringType,
             required=True,
             secret=True,  # Flag config as protected.
-            description="The token to authenticate against the API service. Test keys are not supported for Conversations see https://support.messagebird.com/hc/en-us/articles/360000670709-What-is-the-difference-between-a-live-key-and-a-test-key-"
+            description=(
+                "The token to authenticate against the API service. "
+                "Test keys are not supported for Conversations see "
+                "https://support.messagebird.com/hc/en-us/articles/360000670709-What-is-the-difference-between-a-live-key-and-a-test-key-"  # noqa: E501
+            ),
         ),
         th.Property(
             "start_date",
             th.DateTimeType,
-            description="The earliest record date to sync"
+            description="The earliest record date to sync",
         ),
     ).to_dict()
 
