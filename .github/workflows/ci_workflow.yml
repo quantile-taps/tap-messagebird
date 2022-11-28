@@ -52,3 +52,5 @@ jobs:
     - name: Test with pytest
       run: |
         poetry run pytest --capture=no
+      env:
+        TAP_MESSAGEBIRD_API_KEY: ${{ secrets.TAP_MESSAGEBIRD_API_KEY }}

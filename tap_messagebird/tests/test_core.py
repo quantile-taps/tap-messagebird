@@ -8,7 +8,6 @@ from singer_sdk.testing import get_standard_tap_tests
 from tap_messagebird.tap import TapMessagebird
 
 SAMPLE_CONFIG = {
-    "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
     "api_key": os.getenv("TAP_MESSAGEBIRD_API_KEY"),
 }
 
