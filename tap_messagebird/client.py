@@ -4,13 +4,32 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Dict, Iterable, Optional
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlparse
 
 import requests
 from singer_sdk.helpers.jsonpath import extract_jsonpath
+from singer_sdk.pagination import BaseHATEOASPaginator, BaseOffsetPaginator
 from singer_sdk.streams import RESTStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
+
+
+class MessagebirdHATEOASPaginator(BaseHATEOASPaginator):
+    def get_next_url(self, response):
+        return response.json()["links"]["next"]
+
+
+class MessagebirdOffsetPaginator(BaseOffsetPaginator):
+    def get_next(self, response) -> int | None:
+        response_json = response.json()
+        return response_json["offset"] + response_json["limit"]
+
+    def has_more(self, response) -> bool:
+        response_json = response.json()
+        offset = response_json["offset"]
+        count = response_json["count"]
+        total_count = response_json["totalCount"]
+        return count + offset <= total_count
 
 
 class MessagebirdStream(RESTStream):
@@ -21,6 +40,9 @@ class MessagebirdStream(RESTStream):
     records_jsonpath = "$.items[*]"
     next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
     _LOG_REQUEST_METRIC_URLS: bool = True
+
+    def get_new_paginator(self):
+        return MessagebirdHATEOASPaginator()
 
     @property
     def http_headers(self) -> dict:
@@ -33,31 +55,13 @@ class MessagebirdStream(RESTStream):
         # headers["Private-Token"] = self.config.get("auth_token")
         return headers
 
-    def get_next_page_token(
-        self, response: requests.Response, previous_token: Optional[Any]
-    ) -> Optional[Any]:
-        """Return a token for identifying next page or None if no more pages."""
-        # TODO: If pagination is required, return a token which can be used to get the
-        #       next page. If this is the final page, return "None" to end the
-        #       pagination loop.
-        if self.next_page_token_jsonpath:
-            all_matches = extract_jsonpath(
-                self.next_page_token_jsonpath, response.json()
-            )
-            first_match = next(iter(all_matches), None)
-            next_page_token = first_match
-        else:
-            next_page_token = response.headers.get("X-Next-Page", None)
-
-        return next_page_token
-
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization."""
         params: dict = {}
         if next_page_token:
-            params["page"] = next_page_token
+            return dict(parse_qsl(next_page_token.query))
         if self.replication_key:
             params["sort"] = "asc"
             params["order_by"] = self.replication_key

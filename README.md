@@ -18,7 +18,7 @@ Built with the [Meltano Singer SDK](https://sdk.meltano.com).
 | Setting             | Required | Default | Description |
 |:--------------------|:--------:|:-------:|:------------|
 | api_key             | True     | None    | The token to authenticate against the API service. Test keys are not supported for Conversations see https://support.messagebird.com/hc/en-us/articles/360000670709-What-is-the-difference-between-a-live-key-and-a-test-key- |
-| start_date          | False    | None    | The earliest record date to sync (not implemented yet)  |
+| start_date          | False    | now -3 years | When to pull records starting at what date. ISO8601 format of date, defaults to 3 years ago. |
 | stream_maps         | False    | None    | Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html). |
 | stream_map_config   | False    | None    | User-defined config values to be used within map expressions. |
 | flattening_enabled  | False    | None    | 'True' to enable schema flattening and automatically expand nested properties. |
