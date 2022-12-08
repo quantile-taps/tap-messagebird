@@ -1,31 +1,40 @@
 """Stream type classes for tap-messagebird."""
 
-from pathlib import Path
 from typing import Any, Dict, Optional
 
 from tap_messagebird.client import MessagebirdOffsetPaginator, MessagebirdStream
-
-SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
+from singer_sdk import typing as th
 
 
 class ConversationsStream(MessagebirdStream):
     """Conversations stream."""
 
     url_base = "https://conversations.messagebird.com/v1"
-    name = "conversation"
+    name = "messagebird__conversation"
     path = "/conversations"
     primary_keys = ["id"]
     replication_key = None
-    # Optionally, you may also use `schema_filepath` in place of `schema`:
-    schema_filepath = SCHEMAS_DIR / "conversation.json"
+    limit = 20
 
-    def limit(self):
-        return 20
+    schema = th.PropertiesList(
+        th.Property("id", th.StringType),
+        th.Property("status", th.StringType),
+        th.Property(
+            "contact",
+            th.ObjectType(
+                th.Property("id", th.StringType),
+                th.Property("msisdn", th.IntegerType),
+                th.Property("firstName", th.StringType),
+                th.Property("lastName", th.StringType),
+            ),
+        ),
+        th.Property("createdDatetime", th.DateTimeType),
+        th.Property("updatedDatetime", th.DateTimeType),
+        th.Property("lastReceivedDatetime", th.DateTimeType),
+    ).to_dict()
 
     def get_new_paginator(self):
-        return MessagebirdOffsetPaginator(
-            start_value=0, page_size=self.limit()
-        )  # type: ignore
+        return MessagebirdOffsetPaginator(start_value=0, page_size=self.limit)
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -37,27 +46,5 @@ class ConversationsStream(MessagebirdStream):
         if next_page_token:
             params["offset"] = next_page_token
         params["status"] = "all"
-        params["limit"] = self.limit()
-        return params
-
-
-class MessagesStream(MessagebirdStream):
-    """Messages stream."""
-
-    name = "message"
-    path = "/messages"
-    primary_keys = ["id"]
-    replication_key = None
-    # Optionally, you may also use `schema_filepath` in place of `schema`:
-    schema_filepath = SCHEMAS_DIR / "message.json"
-
-    def get_url_params(
-        self, context: Optional[dict], next_page_token: Optional[Any]
-    ) -> Dict[str, Any]:
-        """Return a dictionary of values to be used in URL parameterization."""
-        params = super().get_url_params(
-            context=context, next_page_token=next_page_token
-        )
-        if params.get("from") is None:
-            params["from"] = self.config["start_date"]
+        params["limit"] = self.limit
         return params

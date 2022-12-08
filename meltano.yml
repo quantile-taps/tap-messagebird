@@ -18,7 +18,19 @@ plugins:
     - name: api_key
       kind: password
     - name: start_date
+    config:
+      api_key: ${MESSAGEBIRD_API_KEY}
   loaders:
   - name: target-jsonl
     variant: andyh1203
     pip_url: target-jsonl
+  - name: target-snowflake
+    variant: datamill-co
+    pip_url: target-snowflake
+    config:
+      snowflake_account: ${SNOWFLAKE_ACCOUNT}
+      snowflake_username: ${SNOWFLAKE_USER}
+      snowflake_password: ${SNOWFLAKE_PASSWORD}
+      snowflake_database: DEVELOPMENT
+      snowflake_schema: INGESTION
+      snowflake_warehouse: COMPUTE_WH
