@@ -96,6 +96,38 @@ class MessagesStream(MessagebirdStream):
             "content",
             th.ObjectType(
                 th.Property("text", th.StringType),
+                th.Property(
+                    "hsm",
+                    th.ObjectType(
+                        th.Property("namespace", th.StringType),
+                        th.Property("templateName", th.StringType),
+                        th.Property(
+                            "language",
+                            th.ObjectType(
+                                th.Property("policy", th.StringType),
+                                th.Property("code", th.StringType),
+                            ),
+                        ),
+                        th.Property(
+                            "components",
+                            th.ArrayType(
+                                th.ObjectType(
+                                    th.Property("type", th.StringType),
+                                    th.Property("sub_type", th.StringType),
+                                    th.Property(
+                                        "parameters",
+                                        th.ArrayType(
+                                            th.ObjectType(
+                                                th.Property("type", th.StringType),
+                                                th.Property("text", th.StringType),
+                                            )
+                                        ),
+                                    ),
+                                )
+                            ),
+                        ),
+                    ),
+                ),
             ),
         ),
         th.Property("direction", th.StringType),
