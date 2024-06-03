@@ -10,7 +10,7 @@ class ConversationsStream(MessagebirdStream):
     """Conversations stream."""
 
     url_base = "https://conversations.messagebird.com/v1"
-    name = "messagebird__conversation"
+    name = "messagebird__conversations"
     path = "/conversations"
     primary_keys = ["id"]
     replication_key = None
@@ -103,7 +103,7 @@ class MessagesStream(MessagebirdStream):
         th.Property(
             "error",
             th.ObjectType(
-                th.Property("code", th.StringType),
+                th.Property("code", th.IntegerType),
                 th.Property("description", th.StringType),
             ),
         ),
