@@ -16,6 +16,7 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 class MessagebirdHATEOASPaginator(BaseHATEOASPaginator):
     def get_next_url(self, response):
+        print(response.json())
         return response.json()["links"]["next"]
 
 
@@ -59,6 +60,8 @@ class MessagebirdStream(RESTStream):
         """Return a dictionary of values to be used in URL parameterization."""
         params: dict = {}
         if next_page_token:
+            print("banaan")
+            print(next_page_token)
             return dict(parse_qsl(next_page_token.query))
         if self.replication_key:
             params["sort"] = "asc"
