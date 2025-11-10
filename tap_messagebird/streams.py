@@ -13,7 +13,7 @@ class ConversationsStream(MessagebirdStream):
     name = "messagebird__conversations"
     path = "/conversations"
     primary_keys = ["id"]
-    replication_key = None
+    replication_key = "updatedDatetime"
     limit = 20
 
     schema = th.PropertiesList(
@@ -33,8 +33,13 @@ class ConversationsStream(MessagebirdStream):
         th.Property("lastReceivedDatetime", th.DateTimeType),
     ).to_dict()
 
-    def get_new_paginator(self):
-        return MessagebirdOffsetPaginator(start_value=0, page_size=self.limit)
+    def get_new_paginator(self, context: Optional[dict] = None):
+        starting_replication_value = self.get_starting_replication_key_value(context=None)
+        return MessagebirdOffsetPaginator(
+            start_value=0, 
+            page_size=self.limit,
+            starting_replication_value=starting_replication_value
+        )
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -55,11 +60,12 @@ class ConversationsStream(MessagebirdStream):
 
         return {
             "conversation_id": record["id"],
+            "replication_value": self.get_starting_replication_key_value(context=None),
         }
 
 
 class MessagesStream(MessagebirdStream):
-    """Conversations stream."""
+    """Messages stream."""
 
     url_base = "https://conversations.messagebird.com/v1"
     name = "messagebird__messages"
@@ -68,8 +74,12 @@ class MessagesStream(MessagebirdStream):
     primary_keys = ["id"]
     limit = 20
 
-    def get_new_paginator(self):
-        return MessagebirdOffsetPaginator(start_value=0, page_size=self.limit)
+    def get_new_paginator(self, context: Optional[dict] = None):
+        return MessagebirdOffsetPaginator(
+            start_value=0, 
+            page_size=self.limit,
+            starting_replication_value=context.get("replication_value")
+        )
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
