@@ -94,6 +94,12 @@ class MessagesStream(MessagebirdStream):
         params["status"] = "all"
         params["limit"] = self.limit
         return params
+    
+    def post_process(self, row: dict, context: Optional[dict] = None) -> dict:
+        """Post process each record."""
+        # Attach conversation_id from context
+        row["conversation_id"] = context.get("conversation_id")
+        return row
 
     schema = th.PropertiesList(
         th.Property("id", th.StringType),
