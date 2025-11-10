@@ -60,8 +60,6 @@ class MessagebirdStream(RESTStream):
         """Return a dictionary of values to be used in URL parameterization."""
         params: dict = {}
         if next_page_token:
-            print("banaan")
-            print(next_page_token)
             return dict(parse_qsl(next_page_token.query))
         if self.replication_key:
             params["sort"] = "asc"
