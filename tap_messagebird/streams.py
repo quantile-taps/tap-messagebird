@@ -73,6 +73,7 @@ class MessagesStream(MessagebirdStream):
     parent_stream_type = ConversationsStream
     primary_keys = ["id"]
     limit = 20
+    state_partitioning_keys = []
 
     def get_new_paginator(self, context: Optional[dict] = None):
         return MessagebirdOffsetPaginator(
