@@ -1,6 +1,7 @@
 """REST client handling, including MessagebirdStream base class."""
 
 from __future__ import annotations
+import typing as t
 from singer_sdk import metrics
 from datetime import datetime
 from pathlib import Path
