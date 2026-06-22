@@ -156,6 +156,21 @@ class MessagesStream(MessagebirdStream):
                 th.Property("description", th.StringType),
             ),
         ),
+        th.Property(
+            "metadata",
+            th.ObjectType(
+                th.Property(
+                    "sender",
+                    th.ObjectType(
+                        # WhatsApp Business-Scoped User ID (BSUID). Always present
+                        # when available; from end of June 2026 the top-level `from`
+                        # field may carry a BSUID instead of a phone number for
+                        # users who adopt a WhatsApp username.
+                        th.Property("userId", th.StringType),
+                    ),
+                ),
+            ),
+        ),
         th.Property("createdDatetime", th.DateTimeType),
         th.Property("updatedDatetime", th.DateTimeType),
     ).to_dict()
